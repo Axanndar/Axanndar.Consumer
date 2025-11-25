@@ -69,7 +69,7 @@ This .NET library adds an abstraction layer over ActiveMQ Artemis, handling conn
 
 ---
 
-You can register the Consume service simply with dependency injection:
+You can register the Consumer service simply with dependency injection:
 
 ```csharp
     // Via options configuration
