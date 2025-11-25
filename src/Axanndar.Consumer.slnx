@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Axanndar.Consumer.Test/Axanndar.Consumer.Test.csproj" Id="dedce61a-ab73-4f29-9341-2bb33f374184" />
+  <Project Path="Axanndar.Consumer/Axanndar.Consumer.csproj" />  
+</Solution>
