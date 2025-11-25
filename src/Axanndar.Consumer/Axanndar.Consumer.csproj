@@ -7,6 +7,7 @@
 	<Description>
 		Axanndar.Consumer is a .NET library that abstracts ActiveMQ Artemis consumer management, simplifies connection handling, and enables easy integration via dependency injection.
 	</Description>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
