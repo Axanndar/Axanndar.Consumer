@@ -18,7 +18,7 @@ namespace Axanndar.Consumer.Logger.Interfaces
         /// <param name="IdEndpoint">The endpoint identifier related to the log entry.</param>
         /// <param name="message">The log message format string.</param>
         /// <param name="args">Optional arguments for message formatting.</param>
-        void LogTrace(string correlationId, string IdEndpoint, string message, params object[] args);
+        void LogTrace(string correlationId, string IdEndpoint, string message);
 
         /// <summary>
         /// Logs an informational message with correlation and endpoint information.
@@ -27,7 +27,7 @@ namespace Axanndar.Consumer.Logger.Interfaces
         /// <param name="IdEndpoint">The endpoint identifier related to the log entry.</param>
         /// <param name="message">The log message format string.</param>
         /// <param name="args">Optional arguments for message formatting.</param>
-        void LogInfo(string correlationId, string IdEndpoint, string message, params object[] args);
+        void LogInfo(string correlationId, string IdEndpoint, string message);
 
         /// <summary>
         /// Logs an error with correlation and endpoint information.
@@ -46,22 +46,19 @@ namespace Axanndar.Consumer.Logger.Interfaces
     public class LoggerConsumerDefault(ILogger<LoggerConsumerDefault> _logger) : ILoggerConsumer
     {
         /// <inheritdoc/>
-        public void LogTrace(string correlationId, string IdEndpoint, string message, params object[] args)
+        public void LogTrace(string correlationId, string IdEndpoint, string message)
         {
-            string formattedMessage = string.Format(message, args);
-            _logger.LogTrace("CorrelationId: {correlationId} | LogLevel: Trace | Endpoint: {IdEndpoint} | Message: {formattedMessage}", correlationId, IdEndpoint, formattedMessage);
+            _logger.LogTrace($"CorrelationId: {correlationId} | LogLevel: Trace | Endpoint: {IdEndpoint} | Message: {message}");
         }
         /// <inheritdoc/>
-        public void LogInfo(string correlationId, string IdEndpoint, string message, params object[] args)
+        public void LogInfo(string correlationId, string IdEndpoint, string message)
         {
-            string formattedMessage = string.Format(message, args);
-            _logger.LogInformation("CorrelationId: {correlationId} | LogLevel: Information | Endpoint: {IdEndpoint} | Message: {formattedMessage}", correlationId, IdEndpoint, formattedMessage);
+            _logger.LogInformation($"CorrelationId: {correlationId} | LogLevel: Information | Endpoint: {IdEndpoint} | Message: {message}");
         }
         /// <inheritdoc/>
         public void LogError(string correlationId, string IdEndpoint, Exception ex)
         {
-            string formattedMessage = ex.ToString();
-            _logger.LogError(ex, "CorrelationId: {correlationId} | LogLevel: Error | Endpoint: {IdEndpoint} | Message: {formattedMessage}", correlationId, IdEndpoint, formattedMessage);
+            _logger.LogError(ex, $"CorrelationId: {correlationId} | LogLevel: Error | Endpoint: {IdEndpoint} | Message: {ex.ToString()}");
         }
     }
 }

@@ -78,7 +78,7 @@ namespace Axanndar.Consumer.Worker
                     catch (Exception ex)
                     {
                         _logger.LogError(_correlationIdProvider.CorrelationId!, _consumer.IdEndpoint!, ex);                        
-                        _logger.LogTrace(_correlationIdProvider.CorrelationId!, _consumer.IdEndpoint!, "Retry on {retryTime}", retryTime);
+                        _logger.LogTrace(_correlationIdProvider.CorrelationId!, _consumer.IdEndpoint!, $"Retry on {retryTime}");
                         // Wait before retrying if an error occurs during message processing
                         await Task.Delay(TimeSpan.FromMilliseconds(retryTime));
                     }
@@ -86,7 +86,7 @@ namespace Axanndar.Consumer.Worker
                 catch (Exception ex)
                 {
                     _logger.LogError(_correlationIdProvider.CorrelationId!, _consumer.IdEndpoint!, ex);
-                    _logger.LogTrace(_correlationIdProvider.CorrelationId!, _consumer.IdEndpoint!, "Retry on {retryTime}", retryTime);
+                    _logger.LogTrace(_correlationIdProvider.CorrelationId!, _consumer.IdEndpoint!, $"Retry on {retryTime}");
                     // Wait before retrying if an error occurs during consumer creation
                     await Task.Delay(TimeSpan.FromMilliseconds(retryTime));
                 }

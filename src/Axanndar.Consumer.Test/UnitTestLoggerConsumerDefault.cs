@@ -13,11 +13,11 @@ namespace Axanndar.Consumer.Test
         {
             var mockLogger = new Mock<ILogger<LoggerConsumerDefault>>();
             var loggerConsumer = new LoggerConsumerDefault(mockLogger.Object);
-            loggerConsumer.LogTrace("corrId", "endpoint", "Test {0}", "msg");
+            loggerConsumer.LogTrace("corrId", "endpoint", $"Test msg");
             mockLogger.Verify(x => x.Log(
                 LogLevel.Trace,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("CorrelationId: corrId") && v.ToString().Contains("Endpoint: endpoint") && v.ToString().Contains("Test msg")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("CorrelationId: corrId") && v.ToString().Contains("Endpoint: endpoint") && v.ToString().Contains($"Test msg")),
                 null,
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()
             ), Times.Once);
@@ -28,7 +28,7 @@ namespace Axanndar.Consumer.Test
         {
             var mockLogger = new Mock<ILogger<LoggerConsumerDefault>>();
             var loggerConsumer = new LoggerConsumerDefault(mockLogger.Object);
-            loggerConsumer.LogInfo("corrId", "endpoint", "Info {0}", "msg");
+            loggerConsumer.LogInfo("corrId", "endpoint", "Info msg");
             mockLogger.Verify(x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
