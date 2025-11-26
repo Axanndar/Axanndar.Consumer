@@ -1,6 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-<!-- [![Nuget](https://img.shields.io/nuget/v/Axanndar.Consumer?style=plastic)](https://www.nuget.org/packages/Axanndar.Consumer) -->
-<!-- ![NuGet Downloads](https://img.shields.io/nuget/dt/Axanndar.Consumer) -->
+[![Nuget](https://img.shields.io/nuget/v/Axanndar.Consumer?style=plastic)](https://www.nuget.org/packages/Axanndar.Consumer)
+![NuGet Downloads](https://img.shields.io/nuget/dt/Axanndar.Consumer)
 [![issues - Axanndar.Consumer](https://img.shields.io/github/issues/Axanndar/Axanndar.Consumer)](https://github.com/Axanndar/Axanndar.Consumer/issues) 
 
 # Axanndar.Consumer
@@ -69,7 +69,7 @@ This .NET library adds an abstraction layer over ActiveMQ Artemis, handling conn
 
 ---
 
-You can register the Consume service simply with dependency injection:
+You can register the Consumer service simply with dependency injection:
 
 ```csharp
     // Via options configuration
