@@ -50,7 +50,7 @@ namespace Axanndar.Consumer.Models
         /// <summary>
         /// The credit value for the consumer.
         /// </summary>
-        public int Credit { get; set; } = ConstAppConfiguration.DefaultValue.Amqp.RETRY_TIME;
+        public int Credit { get; set; } = ConstAppConfiguration.DefaultValue.Amqp.CREDIT;
 
         /// <summary>
         /// Indicates whether the consumer is durable.

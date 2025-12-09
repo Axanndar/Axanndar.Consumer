@@ -90,9 +90,9 @@ namespace Axanndar.Consumer.Worker
                     // Wait before retrying if an error occurs during consumer creation
                     await Task.Delay(TimeSpan.FromMilliseconds(retryTime));
                 }
-
-                _logger.LogInfo(_correlationIdProvider.CorrelationId!, _consumer.IdEndpoint!, "ConsumerBackgroundService is terminated");
             }
+
+            _logger.LogInfo(_correlationIdProvider.CorrelationId!, _consumer.IdEndpoint!, "ConsumerBackgroundService is terminated");
         }
     }
 }
