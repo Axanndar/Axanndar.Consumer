@@ -4,11 +4,17 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<Description>
-		Axanndar.Consumer is a .NET library that abstracts ActiveMQ Artemis consumer management, simplifies connection handling, and enables easy integration via dependency injection.
-	</Description>
-	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	
+	<Title>Open source .NET Consumer for ActiveMQ Artemis</Title>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>	
 	<Authors>Axanndar</Authors>
+	<RootNamespace>Axanndar.Consumer</RootNamespace>
+	<Description>Axanndar.Consumer is a .NET library that abstracts ActiveMQ Artemis consumer management, simplifies connection handling, and enables easy integration via dependency injection.</Description>
+	<PackageTags>Consumer, ActiveMQ, Artemis, AMQP</PackageTags>
+	<PackageProjectUrl>https://github.com/Axanndar/Axanndar.Consumer</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/Axanndar/Axanndar.Consumer</RepositoryUrl>
+	<PackageIcon>icon.png</PackageIcon>	
   </PropertyGroup>
 
   <ItemGroup>
