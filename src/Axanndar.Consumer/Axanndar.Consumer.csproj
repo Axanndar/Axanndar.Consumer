@@ -21,6 +21,21 @@
 	<PackageIcon>icon.png</PackageIcon>	
   </PropertyGroup>
 
+	<ItemGroup>
+		<None Include="..\..\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	
   <ItemGroup>
     <PackageReference Include="AMQPNetLite" Version="2.5.1" />
     <PackageReference Include="AMQPNetLite.Core" Version="2.5.1" />
