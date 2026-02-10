@@ -9,6 +9,7 @@ using Axanndar.Consumer.Models;
 using Axanndar.Consumer.Factory.Interfaces;
 using ActiveMQ.Artemis.Client;
 using System.Collections.Generic;
+using Axanndar.Consumer.Enums;
 
 namespace Axanndar.Consumer.Test
 {
@@ -137,6 +138,48 @@ namespace Axanndar.Consumer.Test
         }
 
         [Fact]
+        public async Task Release_CallsReleaseOnConsumer()
+        {
+            _mockFactory.Setup(f => f.CreateAsync(It.IsAny<IEnumerable<Endpoint>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_mockConnection.Object);
+            _mockConnection.Setup(c => c.CreateConsumerAsync(It.IsAny<ActiveMQ.Artemis.Client.ConsumerConfiguration>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_manualMockConsumer.Object);
+            await _consumer.CreateConsumer();
+            var message = new Message("release-body");
+            _manualMockConsumer.Setup(c => c.Modify(message, false, false)).Verifiable();
+            await _consumer.CallRelease(message);
+            _manualMockConsumer.Verify(c => c.Modify(message, false, false), Times.Once);
+        }
+
+        [Fact]
+        public async Task Retry_CallsRetryOnConsumer()
+        {
+            _mockFactory.Setup(f => f.CreateAsync(It.IsAny<IEnumerable<Endpoint>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_mockConnection.Object);
+            _mockConnection.Setup(c => c.CreateConsumerAsync(It.IsAny<ActiveMQ.Artemis.Client.ConsumerConfiguration>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_manualMockConsumer.Object);
+            await _consumer.CreateConsumer();
+            var message = new Message("retry-body");
+            _manualMockConsumer.Setup(c => c.Modify(message, true, false)).Verifiable();
+            await _consumer.CallRetry(message);
+            _manualMockConsumer.Verify(c => c.Modify(message, true, false), Times.Once);
+        }
+
+        [Fact]
+        public async Task Delivery_Exception()
+        {
+            _mockFactory.Setup(f => f.CreateAsync(It.IsAny<IEnumerable<Endpoint>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_mockConnection.Object);
+            _mockConnection.Setup(c => c.CreateConsumerAsync(It.IsAny<ActiveMQ.Artemis.Client.ConsumerConfiguration>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_manualMockConsumer.Object);
+            await _consumer.CreateConsumer();
+            var message = new Message("exception-body");
+            
+            await Assert.ThrowsAnyAsync<ArgumentOutOfRangeException>(async () => await _consumer.CallException(message, (EnumDeliveryAction)int.MaxValue));            
+        }
+
+
+        [Fact]
         public async Task DisposeAsync_CallsDisposeOnConnectionAndConsumer()
         {
             _mockFactory.Setup(f => f.CreateAsync(It.IsAny<IEnumerable<Endpoint>>(), It.IsAny<CancellationToken>()))
@@ -172,6 +215,24 @@ namespace Axanndar.Consumer.Test
             public async Task CallReject(Message message)
             {
                 var valueTask = (ValueTask)typeof(BaseConsumer).GetMethod("Reject", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.Invoke(this, new object[] { message });
+                await valueTask;
+            }
+
+            public async Task CallRelease(Message message, bool undeliverableHere = false)
+            {
+                var valueTask = (ValueTask)typeof(BaseConsumer).GetMethod("Release", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.Invoke(this, new object[] { message, undeliverableHere });
+                await valueTask;
+            }
+
+            public async Task CallRetry(Message message, bool undeliverableHere = false)
+            {
+                var valueTask = (ValueTask)typeof(BaseConsumer).GetMethod("Retry", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.Invoke(this, new object[] { message, undeliverableHere });
+                await valueTask;
+            }
+
+            public async Task CallException(Message message, EnumDeliveryAction deliveryType, bool undeliverableHere = false)
+            {
+                var valueTask = (ValueTask)typeof(BaseConsumer).GetMethod("Delivery", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.Invoke(this, new object[] { message, deliveryType, undeliverableHere });
                 await valueTask;
             }
         }

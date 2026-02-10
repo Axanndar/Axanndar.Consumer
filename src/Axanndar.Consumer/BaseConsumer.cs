@@ -1,13 +1,15 @@
 ﻿using ActiveMQ.Artemis.Client;
-using Axanndar.Consumer.Interfaces;
+using Amqp.Handler;
 using Axanndar.Consumer.Constants;
+using Axanndar.Consumer.Enums;
+using Axanndar.Consumer.Extensions;
 using Axanndar.Consumer.Factory.Interfaces;
+using Axanndar.Consumer.Interfaces;
 using Axanndar.Consumer.Models;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Axanndar.Consumer.Extensions;
 
 namespace Axanndar.Consumer
 {
@@ -97,9 +99,8 @@ namespace Axanndar.Consumer
         /// </summary>
         /// <param name="message">The message to reject.</param>
         protected async ValueTask Reject(Message message)
-        {
-            _consumer!.Reject(message);
-            await ValueTask.CompletedTask;
+        {            
+            await Delivery(message, EnumDeliveryAction.Reject);            
         }
 
         /// <summary>
@@ -108,7 +109,54 @@ namespace Axanndar.Consumer
         /// <param name="message">The message to accept.</param>
         protected async ValueTask Accept(Message message)
         {
-            await _consumer.AcceptAsync(message);            
+            await Delivery(message, EnumDeliveryAction.Accept);
+        }
+
+        /// <summary>
+        /// Releases the received message, allowing it to be retried later (not increment delivery count).
+        /// </summary>
+        /// <param name="message">The message to release.</param>
+        protected async ValueTask Release(Message message, bool undeliverableHere = false)
+        {
+            await Delivery(message, EnumDeliveryAction.Release, undeliverableHere);
+        }
+
+        /// <summary>
+        /// Releases the received message, allowing it to be retried later (increment delivery count).
+        /// </summary>
+        /// <param name="message">The message to retry.</param>
+        protected async ValueTask Retry(Message message, bool undeliverableHere = false)
+        {
+            await Delivery(message, EnumDeliveryAction.Retry, undeliverableHere);
+        }
+
+        /// <summary>
+        /// Dispatches the delivery action to the broker.
+        /// </summary>
+        /// <param name="message">The message to deliver to the broker.</param>
+        /// <param name="deliveryType">The delivery action to perform (Accept, Reject, Release, Retry).</param>
+        /// <param name="undeliverableHere">If true, indicates the message is undeliverable on this consumer.</param>
+        /// <returns>A completed ValueTask when the broker operation is finished.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="deliveryType"/> is not a supported value.</exception>        
+        protected async ValueTask Delivery(Message message, EnumDeliveryAction deliveryType, bool undeliverableHere = false)
+        {
+            switch (deliveryType)
+            {
+                case EnumDeliveryAction.Accept:
+                    await _consumer.AcceptAsync(message);
+                    break;
+                case EnumDeliveryAction.Reject:
+                    _consumer!.Reject(message);
+                    break;
+                case EnumDeliveryAction.Release:
+                    _consumer!.Modify(message, false, undeliverableHere);
+                    break;
+                case EnumDeliveryAction.Retry:
+                    _consumer!.Modify(message, true, undeliverableHere);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(deliveryType), deliveryType, "DeliveryType is not valid");
+            }   
         }
 
         /// <summary>
